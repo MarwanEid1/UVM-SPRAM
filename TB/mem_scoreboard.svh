@@ -5,7 +5,7 @@ class mem_scoreboard extends uvm_scoreboard;
 
     parameter integer D_WIDTH   = 32;
     parameter integer A_WIDTH   = 4;
-    parameter integer MEM_DEPTH = 16;
+    parameter integer MEM_DEPTH = 2 ** A_WIDTH;
 
     mem_sequence_item sequence_item_h;
 
@@ -32,10 +32,16 @@ class mem_scoreboard extends uvm_scoreboard;
         mem_analysis_imp = new("mem_analysis_imp", this);
     endfunction: build_phase
 
+    function void connect_phase(uvm_phase phase);
+        super.connect_phase(phase);
+        `uvm_info("mem_scoreboard", "connect phase", UVM_HIGH)
+    endfunction: connect_phase
+
     function void write(mem_sequence_item t);
         sequence_item_h = t;
         sequence_item_h.display_out("mem_scoreboard");
         $display("---------------------------------------------------------------------------------------------------------------------------------------");
+        $display("");
         $display("ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo");
         if (previous_wr_en) begin
             mem_array [previous_address] = previous_data_in;
@@ -44,33 +50,29 @@ class mem_scoreboard extends uvm_scoreboard;
         else begin
             rd_op_cnt++;
             if (mem_array [previous_address] == sequence_item_h.data_out) begin
-                $display("[Scoreboard] - Read Operation PASSED");
+                $display("[Scoreboard] - Read Operation from address = '%h' PASSED", previous_address);
                 suc_rd_op_cnt++;
             end
             else begin
-                $display("[Scoreboard] - Read Operation FAILED");
+                $display("[Scoreboard] - Read Operation from address = '%h' FAILED", previous_address);
             end
-            $display("Actual:   address = %h, data_out = %h", previous_address, sequence_item_h.data_out);
-            $display("Expected: address = %h, data_out = %h", previous_address, mem_array [previous_address]);
+            $display("Actual Data:   data_out = %h", sequence_item_h.data_out);
+            $display("Expected Data: data_out = %h", mem_array [previous_address]);
         end
         previous_wr_en = sequence_item_h.wr_en;
         previous_data_in = sequence_item_h.data_in;
         previous_address = sequence_item_h.address;
         $display("ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo");
+        $display("");
         if (suc_rd_op_cnt == rd_op_cnt) begin
-            $display("");
             $display("Scoreboard Summary: All Read Operations PASSED");
-            $display("Read Operations: %0d --- Successfull Read Operations: %0d",
-                     rd_op_cnt, suc_rd_op_cnt);
-            $display("");
         end
         else begin
-            $display("");
             $display("Scoreboard Summary: One or More Read Operations FAILED");
-            $display("Read Operations: %0d --- Successfull Read Operations: %0d",
-                     rd_op_cnt, suc_rd_op_cnt);
-            $display("");
         end
+        $display("Number of Performed Read Operations: %0d --- Number of Successfull Read Operations: %0d",
+                 rd_op_cnt, suc_rd_op_cnt);
+        $display("");
     endfunction: write
 
 endclass: mem_scoreboard

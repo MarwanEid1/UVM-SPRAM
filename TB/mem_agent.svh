@@ -3,11 +3,11 @@ class mem_agent extends uvm_agent;
 
     `uvm_component_utils(mem_agent)
 
-    virtual interface mem_if vif;
-
     mem_driver driver_h;
     mem_monitor monitor_h;
     mem_sequencer sequencer_h;
+
+    virtual mem_if vif;
 
     uvm_analysis_port # (mem_sequence_item) mem_analysis_port;
 
@@ -22,8 +22,8 @@ class mem_agent extends uvm_agent;
         driver_h = mem_driver::type_id::create("driver_h", this);
         monitor_h = mem_monitor::type_id::create("monitor_h", this);
         sequencer_h = mem_sequencer::type_id::create("sequencer_h", this);
-        if(!uvm_config_db # (virtual interface mem_if) :: get(this, "", "vif", vif)) begin
-            `uvm_error("NOVIF", {"virtual interface must be set for: ", get_full_name(), ".vif"});
+        if(!uvm_config_db # (virtual mem_if) :: get(this, "", "vif", vif)) begin
+            `uvm_error("NOVIF", {"vif must be set for: ", get_full_name(), ".vif"});
         end
         uvm_config_db # (virtual mem_if) :: set(this, "driver_h", "vif", vif);
         uvm_config_db # (virtual mem_if) :: set(this, "monitor_h", "vif", vif);

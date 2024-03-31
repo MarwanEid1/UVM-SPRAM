@@ -6,14 +6,14 @@ class mem_sequence_item extends uvm_sequence_item;
     parameter integer D_WIDTH   = 32;
     parameter integer A_WIDTH   = 4;
 
-          bit               rst_n;
+          logic               rst_n;
          
-    rand  bit               wr_en;
-    rand  bit [D_WIDTH-1:0] data_in;
-    randc bit [A_WIDTH-1:0] address;
+    rand  logic               wr_en;
+    rand  logic [D_WIDTH-1:0] data_in;
+    randc logic [A_WIDTH-1:0] address;
 
-          bit [D_WIDTH-1:0] data_out;
-          bit               valid_out;
+          logic [D_WIDTH-1:0] data_out;
+          logic               valid_out;
 
     constraint c_wr_en {
         wr_en dist {1 := 2, 0 := 1};

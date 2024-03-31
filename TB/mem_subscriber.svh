@@ -42,6 +42,16 @@ class mem_subscriber extends uvm_subscriber # (mem_sequence_item);
         cvr_grp = new();
     endfunction: new
 
+    function void build_phase(uvm_phase phase);
+        super.build_phase(phase);
+        `uvm_info("mem_subscriber", "build phase", UVM_HIGH)
+    endfunction: build_phase
+
+    function void connect_phase(uvm_phase phase);
+        super.connect_phase(phase);
+        `uvm_info("mem_subscriber", "connect phase", UVM_HIGH)
+    endfunction: connect_phase
+
     function void write(mem_sequence_item t);
         sequence_item_h = t;
         sequence_item_h.display_out("mem_subscriber");
