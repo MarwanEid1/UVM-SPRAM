@@ -4,12 +4,12 @@ interface mem_if # (
     parameter integer A_WIDTH = 4
 );
 
-    bit               clk;
-    bit               rst_n;
-    bit               wr_en;
-    bit [D_WIDTH-1:0] data_in;
-    bit [A_WIDTH-1:0] address;
-    bit [D_WIDTH-1:0] data_out;
-    bit               valid_out;
+    logic               clk;
+    logic               rst_n;
+    logic               wr_en;
+    logic [A_WIDTH-1:0] address;
+    logic [D_WIDTH-1:0] data_in;
+    logic [D_WIDTH-1:0] data_out;
+    logic               valid_out;
 
 endinterface: mem_if
