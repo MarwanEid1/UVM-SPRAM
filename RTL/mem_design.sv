@@ -2,21 +2,19 @@
 module memory # (
     parameter integer D_WIDTH   = 32,
     parameter integer A_WIDTH   = 4,
-    parameter integer MEM_DEPTH = 16
+    parameter integer MEM_DEPTH = 2 ** A_WIDTH
 ) (
     input  logic               clk,
     input  logic               rst_n,
     input  logic               wr_en,
-    input  logic [D_WIDTH-1:0] data_in,
     input  logic [A_WIDTH-1:0] address,
+    input  logic [D_WIDTH-1:0] data_in,
     output logic [D_WIDTH-1:0] data_out,
     output logic               valid_out
 );
 
-    // memory array declaration
     logic [D_WIDTH-1:0] mem_array [0:MEM_DEPTH-1];
 
-    // memory logic
     always @ (posedge clk or negedge rst_n) begin
         
         if (!rst_n) begin
